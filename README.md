@@ -319,9 +319,7 @@ df -h /mnt/moosefs_data
 
 ---
 
-## 13. Commandes d'administration
-
-### 13.1. Informations sur le cluster
+## 13. Informations sur le cluster
 
 ```bash
 # Informations générales
@@ -335,16 +333,6 @@ mfscli -SCS
 
 # État des disques
 mfscli -SHD
-```
-
-### 13.2. Gestion de la réplication
-
-```bash
-# Définir un objectif de réplication
-mfssetgoal 2 /mnt/moosefs_data/mon_dossier
-
-# Vérifier l'objectif de réplication
-mfsgetgoal /mnt/moosefs_data/mon_dossier
 ```
 
 ---
