@@ -162,8 +162,6 @@ MooseFS utilisera tout l'espace disponible avec une marge de sécurité.
 
 MooseFS limitera son utilisation à 100 GiB.
 
-> **Recommandation :** Utilisez XFS comme système de fichiers sous-jacent pour les partitions de stockage de chunks.
-
 ---
 
 ## 7. Configuration de la résolution DNS
