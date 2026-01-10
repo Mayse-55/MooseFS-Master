@@ -12,7 +12,8 @@
 
 > **Architecture :** Cette installation configure un serveur hybride qui agit à la fois comme Master Server (gestion des métadonnées) et Chunkserver (stockage de données).
 
-> **Documentation dédiée :** Pour l'ajout de Chunkservers supplémentaires, consultez la documentation spécifique : https://github.com/Mayse-55/MooseFS-Chunkserver
+> **Documentation Chunkservers :**  
+> Pour l'ajout de Chunkservers supplémentaires, consultez la documentation spécifique : https://github.com/Mayse-55/MooseFS-Chunkserver
 ---
 
 ## 1. Extension de la partition root (optionnel)
