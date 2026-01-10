@@ -6,7 +6,8 @@
 * Accès administrateur (sudo ou root)
 * Configuration réseau fonctionnelle
 
-> **Note importante :** Cette documentation a été testée et validée sur une machine virtuelle Proxmox sous Debian 13. En cas de problème, vérifiez votre configuration réseau, DNS et vos disques.
+> [!caution]
+> Cette documentation a été testée et validée sur une machine virtuelle Proxmox sous Debian 13. En cas de problème, vérifiez votre configuration réseau, DNS et vos disques.
 
 > **Architecture :** Cette installation configure un serveur hybride qui agit à la fois comme Master Server (gestion des métadonnées) et Chunkserver (stockage de données).
 
