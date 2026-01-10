@@ -12,7 +12,7 @@
 > ❌ Si vous rencontrez des problèmes, vérifiez votre configuration réseau, DNS et vos disques.
 
 > [!note]
-> 📌 Cette installation configure un serveur **hybride** qui agit à la fois comme **Master Server** (métadonnées) et **Chunkserver** (stockage de données).
+> Cette installation configure un serveur **hybride** qui agit à la fois comme **Master Server** (métadonnées) et **Chunkserver** (stockage de données).
 
 ---
 
