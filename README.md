@@ -2,7 +2,7 @@
 
 ## Prérequis
 
-* Système d'exploitation : Debian 12 ou Debian 13
+* Système d'exploitation : Debian 13
 * Accès administrateur (sudo ou root)
 * Configuration réseau fonctionnelle
 
