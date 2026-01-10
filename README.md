@@ -1,24 +1,20 @@
-# 🐘 Installation d'un Serveur MooseFS Master + Chunkserver
-[![MooseFS](https://img.shields.io/badge/MooseFS-Distributed%20FS-red?style=flat-square&logo=linux)](https://moosefs.com/)
+# Installation d'un Serveur MooseFS Master + Chunkserver
 
-## 🧾 Prérequis
+## Prérequis
 
-* 🖥️ Système : **Debian 12 et Debian 13**
-* 🔐 Accès `sudo` ou root
-* 🌐 Configuration réseau fonctionnelle
+* Système d'exploitation : Debian 12 ou Debian 13
+* Accès administrateur (sudo ou root)
+* Configuration réseau fonctionnelle
 
-> [!caution]
-> ✅ Cette documentation a été **testée et validée** sur une machine virtuelle Proxmox sous **Debian 13**.  
-> ❌ Si vous rencontrez des problèmes, vérifiez votre configuration réseau, DNS et vos disques.
+> **Note importante :** Cette documentation a été testée et validée sur une machine virtuelle Proxmox sous Debian 13. En cas de problème, vérifiez votre configuration réseau, DNS et vos disques.
 
-> [!note]
-> Cette installation configure un serveur **hybride** qui agit à la fois comme **Master Server** (métadonnées) et **Chunkserver** (stockage de données).
+> **Architecture :** Cette installation configure un serveur hybride qui agit à la fois comme Master Server (gestion des métadonnées) et Chunkserver (stockage de données).
 
 ---
 
-## 🧹 (Optionnel) Étendre la partition root
+## 1. Extension de la partition root (optionnel)
 
-Si vous utilisez Proxmox et avez besoin d'espace supplémentaire :
+Si vous utilisez Proxmox et nécessitez de l'espace supplémentaire :
 
 ```bash
 lvremove /dev/pve/data
@@ -28,7 +24,7 @@ resize2fs /dev/mapper/pve-root
 
 ---
 
-## 🐂 Ajouter les dépôts MooseFS
+## 2. Configuration des dépôts MooseFS
 
 ```bash
 sudo mkdir -p /etc/apt/keyrings
@@ -40,7 +36,7 @@ echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/moosefs.gpg] http://repository
 
 ---
 
-## 🔄 Mise à jour du système
+## 3. Mise à jour du système
 
 ```bash
 sudo apt update
@@ -50,15 +46,15 @@ sudo apt autoremove -y
 
 ---
 
-## 📦 Installation des paquets nécessaires
+## 4. Installation des paquets
 
-### Dépendances système
+### 4.1. Dépendances système
 
 ```bash
 sudo apt install -y build-essential libpcap-dev zlib1g-dev libfuse3-dev pkg-config fuse3
 ```
 
-### Paquets MooseFS (Master + Chunkserver)
+### 4.2. Paquets MooseFS
 
 ```bash
 sudo apt install -y moosefs-master moosefs-chunkserver moosefs-metalogger moosefs-client moosefs-cgi moosefs-cgiserv moosefs-cli
@@ -66,16 +62,16 @@ sudo apt install -y moosefs-master moosefs-chunkserver moosefs-metalogger moosef
 
 ---
 
-## 🔧 Configuration du Master Server
+## 5. Configuration du Master Server
 
-### 📁 Préparer les répertoires
+### 5.1. Préparation des répertoires
 
 ```bash
 sudo mkdir -p /var/lib/mfs
 sudo chown -R mfs:mfs /var/lib/mfs
 ```
 
-### 📝 Configuration du Master
+### 5.2. Configuration initiale
 
 ```bash
 cd /etc/mfs
@@ -83,7 +79,7 @@ sudo cp mfsmaster.cfg.sample mfsmaster.cfg
 sudo cp mfsexports.cfg.sample mfsexports.cfg
 ```
 
-### 🗄️ Initialiser le fichier de métadonnées
+### 5.3. Initialisation du fichier de métadonnées
 
 ```bash
 cd /var/lib/mfs
@@ -92,38 +88,38 @@ sudo chown mfs:mfs metadata.mfs
 sudo rm metadata.mfs.empty
 ```
 
-### ⚙️ (Optionnel) Personnaliser la configuration
+### 5.4. Personnalisation de la configuration (optionnel)
 
 ```bash
 sudo nano /etc/mfs/mfsmaster.cfg
 ```
 
-Paramètres importants à vérifier :
+Paramètres principaux à vérifier :
 - `WORKING_USER = mfs`
 - `WORKING_GROUP = mfs`
 - `DATA_PATH = /var/lib/mfs`
 
-### 🔐 Configuration des exports (permissions d'accès)
+### 5.5. Configuration des permissions d'accès
 
 ```bash
 sudo nano /etc/mfs/mfsexports.cfg
 ```
 
-Exemple de configuration permettant l'accès au réseau local :
+Exemple de configuration pour un réseau local :
 
 ```bash
-# Autoriser tout le réseau 192.168.1.0/24 en lecture/écriture
+# Autorisation du réseau 192.168.1.0/24 en lecture/écriture
 192.168.1.0/24          /       rw,alldirs,maproot=0
 
-# Ou autoriser tous les clients (⚠️ moins sécurisé)
+# Alternative : autorisation globale (moins sécurisé)
 *                       /       rw,alldirs,maproot=0
 ```
 
 ---
 
-## 🗂️ Configuration du Chunkserver
+## 6. Configuration du Chunkserver
 
-### 📁 Préparer les répertoires de stockage
+### 6.1. Préparation des répertoires de stockage
 
 ```bash
 sudo mkdir -p /mnt/moosefs_chunks
@@ -131,7 +127,7 @@ sudo mkdir -p /mnt/moosefs_data
 sudo chown -R mfs:mfs /mnt/moosefs_chunks
 ```
 
-### 📝 Configuration du Chunkserver
+### 6.2. Configuration initiale
 
 ```bash
 cd /etc/mfs
@@ -139,58 +135,56 @@ sudo cp mfschunkserver.cfg.sample mfschunkserver.cfg
 sudo cp mfshdd.cfg.sample mfshdd.cfg
 ```
 
-### 📌 Définir le disque des chunks
+### 6.3. Définition du stockage des chunks
 
 ```bash
 sudo nano /etc/mfs/mfshdd.cfg
 ```
 
-**Option 1 : Disque dédié (recommandé)**
+**Option A : Disque dédié (recommandé)**
 
 ```bash
 /mnt/moosefs_chunks
 ```
 
-MooseFS utilisera tout l'espace disponible, moins une marge de sécurité.
+MooseFS utilisera tout l'espace disponible avec une marge de sécurité.
 
-**Option 2 : Disque partagé avec le système**
+**Option B : Disque partagé avec limitation**
 
 ```bash
 /mnt/moosefs_chunks =100GiB
 ```
 
-MooseFS limitera son utilisation à 100 GiB (ajustez selon vos besoins).
+MooseFS limitera son utilisation à 100 GiB.
 
-> [!tip]
-> 💡 Il est recommandé d'utiliser **XFS** comme système de fichiers sous-jacent pour les disques destinés au stockage de chunks.
+> **Recommandation :** Utilisez XFS comme système de fichiers sous-jacent pour les partitions de stockage de chunks.
 
 ---
 
-## 📇 Configurer la résolution DNS locale
+## 7. Configuration de la résolution DNS
 
 ```bash
 sudo nano /etc/hosts
 ```
 
-Ajouter l'entrée pour le Master :
+Ajout de l'entrée pour le Master Server :
 
 ```bash
 # MooseFS Master Server
 192.168.1.10    npx-1.lan npx-1 mfsmaster
 ```
 
-> [!important]
-> 🔔 Remplacez `192.168.1.10` par l'adresse IP réelle de votre serveur Master.
+> **Important :** Remplacez `192.168.1.10` par l'adresse IP réelle de votre serveur.
 
 ---
 
-## 🔁 Montage automatique au démarrage
+## 8. Configuration du montage automatique
 
 ```bash
 sudo nano /etc/fstab
 ```
 
-Ajouter au début du fichier :
+Ajout de la ligne de montage :
 
 ```bash
 # MooseFS - Montage automatique
@@ -199,15 +193,15 @@ mfsmount    /mnt/moosefs_data    fuse    mfsmaster=mfsmaster,mfsport=9421,_netde
 
 ---
 
-## 🚀 Démarrage des services
+## 9. Démarrage des services
 
-### Recharger la configuration systemd
+### 9.1. Rechargement de la configuration systemd
 
 ```bash
 sudo systemctl daemon-reload
 ```
 
-### 🎯 Démarrer le Master Server
+### 9.2. Activation du Master Server
 
 ```bash
 sudo systemctl enable moosefs-master.service
@@ -215,7 +209,7 @@ sudo systemctl start moosefs-master.service
 sudo systemctl status moosefs-master.service
 ```
 
-### 💾 Démarrer le Chunkserver
+### 9.3. Activation du Chunkserver
 
 ```bash
 sudo systemctl enable moosefs-chunkserver.service
@@ -223,7 +217,7 @@ sudo systemctl start moosefs-chunkserver.service
 sudo systemctl status moosefs-chunkserver.service
 ```
 
-### 📋 Démarrer le Metalogger (optionnel mais recommandé)
+### 9.4. Activation du Metalogger (optionnel mais recommandé)
 
 ```bash
 cd /etc/mfs
@@ -234,7 +228,7 @@ sudo systemctl start moosefs-metalogger.service
 sudo systemctl status moosefs-metalogger.service
 ```
 
-### 🌐 Démarrer l'interface Web (CGI)
+### 9.5. Activation de l'interface Web
 
 ```bash
 sudo systemctl enable moosefs-cgiserv.service
@@ -244,22 +238,22 @@ sudo systemctl status moosefs-cgiserv.service
 
 ---
 
-## 🗂️ Monter le système de fichiers MooseFS
+## 10. Montage du système de fichiers MooseFS
 
-### Montage manuel
+### 10.1. Montage manuel
 
 ```bash
 sudo mkdir -p /mnt/moosefs_data
 sudo mount -t moosefs mfsmaster: /mnt/moosefs_data
 ```
 
-Ou avec `mfsmount` :
+Alternative avec mfsmount :
 
 ```bash
 sudo mfsmount -H mfsmaster /mnt/moosefs_data
 ```
 
-### Vérifier le montage
+### 10.2. Vérification du montage
 
 ```bash
 df -h | grep moosefs
@@ -268,53 +262,53 @@ mount | grep moosefs
 
 ---
 
-## 🖥️ Accéder à l'interface Web de monitoring
+## 11. Accès à l'interface Web de monitoring
 
-Ouvrez votre navigateur et accédez à :
+L'interface est accessible via :
 
 ```
 http://mfsmaster:9425
 ```
 
-Ou avec l'adresse IP :
+Ou directement par adresse IP :
 
 ```
 http://192.168.1.10:9425
 ```
 
-Vous pourrez y voir :
+Informations disponibles :
 - État du cluster
-- Espace disque utilisé/disponible
+- Espace disque utilisé et disponible
 - Nombre de chunks
 - Liste des serveurs connectés
 - Statistiques de performance
 
 ---
 
-## ✅ Vérifications post-installation
+## 12. Vérifications post-installation
 
-### Vérifier l'état du Master
+### 12.1. Vérification du Master Server
 
 ```bash
 sudo mfsmaster -v
 sudo systemctl status moosefs-master
 ```
 
-### Vérifier l'état du Chunkserver
+### 12.2. Vérification du Chunkserver
 
 ```bash
 sudo mfschunkserver -v
 sudo systemctl status moosefs-chunkserver
 ```
 
-### Lister les serveurs connectés
+### 12.3. Liste des serveurs connectés
 
 ```bash
 mfscli -SIN
 mfscli -SCS
 ```
 
-### Vérifier l'espace disponible
+### 12.4. Vérification de l'espace disponible
 
 ```bash
 df -h /mnt/moosefs_data
@@ -322,9 +316,9 @@ df -h /mnt/moosefs_data
 
 ---
 
-## 🔧 Commandes utiles
+## 13. Commandes d'administration
 
-### Informations sur le cluster
+### 13.1. Informations sur le cluster
 
 ```bash
 # Informations générales
@@ -340,43 +334,61 @@ mfscli -SCS
 mfscli -SHD
 ```
 
-### Gestion des objectifs de réplication
+### 13.2. Gestion de la réplication
 
 ```bash
-# Définir un objectif de réplication pour un fichier/dossier
+# Définir un objectif de réplication
 mfssetgoal 2 /mnt/moosefs_data/mon_dossier
 
-# Vérifier l'objectif
+# Vérifier l'objectif de réplication
 mfsgetgoal /mnt/moosefs_data/mon_dossier
 ```
 
 ---
 
-## 🛡️ Recommandations de production
+## 14. Recommandations pour un environnement de production
 
-> [!warning]
-> ⚠️ Pour un environnement de production :
+### 14.1. Haute disponibilité
 
-1. **Haute disponibilité** : Configurez au moins 2 Chunkservers supplémentaires sur des machines séparées
-2. **Sauvegarde des métadonnées** : Installez un Metalogger sur une machine différente du Master
-3. **Monitoring** : Surveillez régulièrement l'interface CGI et les logs
-4. **Objectif de réplication** : Configurez `goal=2` minimum (2 copies de chaque fichier)
-5. **Système de fichiers** : Utilisez XFS pour les partitions de chunks
-6. **Réseau** : Utilisez un réseau Gigabit ou supérieur
-7. **Sauvegardes** : Sauvegardez régulièrement `/var/lib/mfs/metadata.mfs`
+Configurez au moins deux Chunkservers supplémentaires sur des machines physiquement séparées.
+
+### 14.2. Sauvegarde des métadonnées
+
+Installez un Metalogger sur une machine différente du Master Server pour assurer la redondance des métadonnées.
+
+### 14.3. Monitoring
+
+Surveillez régulièrement l'interface CGI et les fichiers de logs système pour détecter les anomalies.
+
+### 14.4. Réplication des données
+
+Configurez un objectif de réplication minimum de 2 (deux copies de chaque fichier) pour garantir la disponibilité des données.
+
+### 14.5. Système de fichiers
+
+Utilisez XFS comme système de fichiers sous-jacent pour les partitions dédiées aux chunks.
+
+### 14.6. Infrastructure réseau
+
+Utilisez un réseau Gigabit Ethernet ou supérieur pour assurer des performances optimales.
+
+### 14.7. Sauvegarde régulière
+
+Effectuez des sauvegardes régulières du fichier `/var/lib/mfs/metadata.mfs` sur un support externe.
 
 ---
 
-## 📚 Ressources supplémentaires
+## 15. Ressources et support
 
-- 🌐 Site officiel : [https://moosefs.com](https://moosefs.com)
-- 📖 Documentation : [https://moosefs.com/support](https://moosefs.com/support)
-- 🐙 GitHub : [https://github.com/moosefs/moosefs](https://github.com/moosefs/moosefs)
-- 💬 Support : support@moosefs.com
+- Site officiel : https://moosefs.com
+- Documentation : https://moosefs.com/support
+- Dépôt GitHub : https://github.com/moosefs/moosefs
+- Support technique : support@moosefs.com
 
 ---
 
-## 📝 Licence
+## 16. Informations légales
 
-MooseFS est distribué sous **licence GPL v2**.  
-Copyright © 2008-2025 Jakub Kruszona-Zawadzki, Saglabs SA
+MooseFS est distribué sous licence GPL v2.
+
+Copyright 2008-2025 Jakub Kruszona-Zawadzki, Saglabs SA
