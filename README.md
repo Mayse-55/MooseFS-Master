@@ -11,7 +11,7 @@
 > En cas de problème, vérifiez votre configuration réseau, DNS et vos disques.
 
 > **Architecture :**  
-> Cette installation configure un serveur hybride qui agit à la fois comme Master Server (gestion des métadonnées) et Chunkserver (stockage de données).
+> Cette installation configure un serveur hybride qui agit à la fois comme Master Server et Chunkserver.
 
 > **Documentation Chunkservers :**  
 > Pour l'ajout de Chunkservers, consultez : https://github.com/Mayse-55/MooseFS-Chunkserver
