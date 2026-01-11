@@ -348,8 +348,8 @@ mfssetsclass -r 2CP /mnt/moosefs_data
 - `EC4+1` - Erasure Coding (plus complexe)
 - `EC8+1` - Erasure Coding (plus complexe)
 
-**Vérification :**
 ```bash
+# Vérification de la réplication
 mfsgetsclass /mnt/moosefs_data
 ```
 Vous devriez voir `2CP` ou autre cela dépent de votre choix de réplication
