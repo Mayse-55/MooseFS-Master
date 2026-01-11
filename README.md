@@ -323,7 +323,7 @@ df -h /mnt/moosefs_data
 
 ```bash
 # Informations générales
-mfsgetgoal /mnt/moosefs_data
+ mfsgetsclass /mnt/moosefs_data
 
 # Statistiques du Master
 mfscli -SMI
