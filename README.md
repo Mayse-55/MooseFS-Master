@@ -342,17 +342,16 @@ mfscli -SHD
 # Définir un objectif de réplication
 mfssetsclass -r 2CP /mnt/moosefs_data
 ```
-
 Classes prédéfinies disponibles :
 - `2CP` - 2 copies (recommandé pour vous)
 - `3CP` - 3 copies (sécurité maximale)
 - `EC4+1` - Erasure Coding (plus complexe)
 - `EC8+1` - Erasure Coding (plus complexe)
   
-Vérifier après :
 ```bash
 mfsgetsclass /mnt/moosefs_data
 ```
+Vous devriez voir 2CP ou autre cela dépent de votre choix de réplication
 ---
 
 ## 14. Recommandations pour un environnement de production
