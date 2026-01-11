@@ -343,7 +343,7 @@ mfscli -SHD
 mfssetsclass -r 2CP /mnt/moosefs_data
 ```
 **Classes prédéfinies disponibles :**
-- `2CP` - 2 copies (recommandé pour vous)
+- `2CP` - 2 copies (Classique)
 - `3CP` - 3 copies (sécurité maximale)
 - `EC4+1` - Erasure Coding (plus complexe)
 - `EC8+1` - Erasure Coding (plus complexe)
