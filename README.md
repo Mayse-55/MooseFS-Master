@@ -352,7 +352,8 @@ mfssetsclass -r 2CP /mnt/moosefs_data
 ```bash
 mfsgetsclass /mnt/moosefs_data
 ```
-Vous devriez voir 2CP ou autre cela dépent de votre choix de réplication
+Vous devriez voir `2CP` ou autre cela dépent de votre choix de réplication
+
 ---
 
 ## 14. Recommandations pour un environnement de production
