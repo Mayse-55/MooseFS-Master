@@ -337,17 +337,18 @@ mfscli -SCS
 mfscli -SHD
 ```
 
-13.2. Gestion de la réplication
+### 13.2. Gestion de la réplication
 ```bash
 # Définir un objectif de réplication
 mfssetsclass -r 2CP /mnt/moosefs_data
 ```
-Classes prédéfinies disponibles :
+**Classes prédéfinies disponibles :**
 - `2CP` - 2 copies (recommandé pour vous)
 - `3CP` - 3 copies (sécurité maximale)
 - `EC4+1` - Erasure Coding (plus complexe)
 - `EC8+1` - Erasure Coding (plus complexe)
-  
+
+**Vérification :**
 ```bash
 mfsgetsclass /mnt/moosefs_data
 ```
