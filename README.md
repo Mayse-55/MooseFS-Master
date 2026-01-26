@@ -401,4 +401,8 @@ Effectuez des sauvegardes régulières du fichier `/var/lib/mfs/metadata.mfs` su
 
 MooseFS est distribué sous licence GPL v2.
 
+---
+
+**Documentation réalisée par Nathaël Polnecq**
+
 Copyright 2008-2025 Jakub Kruszona-Zawadzki, Saglabs SA
